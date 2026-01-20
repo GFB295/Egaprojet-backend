@@ -1,0 +1,538 @@
+{
+	"info": {
+		"_postman_id": "ega-bank-api-collection",
+		"name": "Ega Bank API",
+		"description": "Collection Postman pour l'API de la banque Ega",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Jean\",\n  \"dateNaissance\": \"1990-01-15\",\n  \"sexe\": \"M\",\n  \"adresse\": \"123 Rue de la Paix, Paris\",\n  \"telephone\": \"0123456789\",\n  \"courriel\": \"jean.dupont@example.com\",\n  \"nationalite\": \"Française\",\n  \"username\": \"jdupont\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"jdupont\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Marie\",\n  \"dateNaissance\": \"1985-05-20\",\n  \"sexe\": \"F\",\n  \"adresse\": \"456 Avenue des Champs, Lyon\",\n  \"telephone\": \"0987654321\",\n  \"courriel\": \"marie.martin@example.com\",\n  \"nationalite\": \"Française\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clients",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "clients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Clients",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/clients",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "clients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Client By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/clients/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "clients", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Marie\",\n  \"dateNaissance\": \"1985-05-20\",\n  \"sexe\": \"F\",\n  \"adresse\": \"789 Nouvelle Adresse, Marseille\",\n  \"telephone\": \"0987654321\",\n  \"courriel\": \"marie.martin@example.com\",\n  \"nationalite\": \"Française\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clients/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "clients", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Client",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/clients/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "clients", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comptes",
+			"item": [
+				{
+					"name": "Create Compte Courant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/client/1?typeCompte=COURANT",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "client", "1"],
+							"query": [
+								{
+									"key": "typeCompte",
+									"value": "COURANT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Compte Epargne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/client/1?typeCompte=EPARGNE",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "client", "1"],
+							"query": [
+								{
+									"key": "typeCompte",
+									"value": "EPARGNE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Comptes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Compte By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Compte By Numero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/numero/FR1420041010050500013M02606",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "numero", "FR1420041010050500013M02606"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comptes By Client ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/client/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "client", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Compte",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/comptes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "comptes", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Depot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroCompte\": \"FR1420041010050500013M02606\",\n  \"montant\": 1000.00,\n  \"description\": \"Dépôt initial\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/depot",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "depot"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrait",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroCompte\": \"FR1420041010050500013M02606\",\n  \"montant\": 250.00,\n  \"description\": \"Retrait d'espèces\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/retrait",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "retrait"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Virement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"compteSource\": \"FR1420041010050500013M02606\",\n  \"compteDestinataire\": \"FR1420041010050500013M02607\",\n  \"montant\": 500.00,\n  \"description\": \"Virement mensuel\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/virement",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "virement"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions By Compte",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/compte/FR1420041010050500013M02606",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "compte", "FR1420041010050500013M02606"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Releve (Transactions by Period)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroCompte\": \"FR1420041010050500013M02606\",\n  \"dateDebut\": \"2024-01-01\",\n  \"dateFin\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/releve",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "releve"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "transactions", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Releves",
+			"item": [
+				{
+					"name": "Imprimer Releve",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroCompte\": \"FR1420041010050500013M02606\",\n  \"dateDebut\": \"2024-01-01\",\n  \"dateFin\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/releves/imprimer",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "releves", "imprimer"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
