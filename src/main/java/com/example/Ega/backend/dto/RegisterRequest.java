@@ -1,5 +1,6 @@
 package com.example.Ega.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ public class RegisterRequest {
     private String prenom;
     
     @NotNull(message = "La date de naissance est obligatoire")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateNaissance;
     
     @NotBlank(message = "Le sexe est obligatoire")
