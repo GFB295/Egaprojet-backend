@@ -3,6 +3,7 @@ package com.example.Ega.backend.service;
 import com.example.Ega.backend.dto.ClientDTO;
 import com.example.Ega.backend.entity.Client;
 import com.example.Ega.backend.repository.ClientRepository;
+import com.example.Ega.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,9 @@ public class ClientService {
     
     @Autowired
     private ClientRepository clientRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
     
     public ClientDTO createClient(ClientDTO clientDTO) {
         if (clientRepository.existsByCourriel(clientDTO.getCourriel())) {
@@ -70,10 +74,16 @@ public class ClientService {
         return toDTO(client);
     }
     
+    @Transactional
     public void deleteClient(String id) {
-        if (!clientRepository.existsById(id)) {
-            throw new RuntimeException("Client non trouvé avec l'ID: " + id);
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client non trouvé avec l'ID: " + id));
+        
+        // Supprimer aussi l'utilisateur associé si il existe
+        if (client.getUser() != null) {
+            userRepository.delete(client.getUser());
         }
+        
         clientRepository.deleteById(id);
     }
     
