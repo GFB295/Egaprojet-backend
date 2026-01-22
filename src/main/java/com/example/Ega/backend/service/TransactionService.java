@@ -28,11 +28,8 @@ public class TransactionService {
     @Autowired
     private CompteRepository compteRepository;
     
-    @Autowired
-    private CompteService compteService;
-    
-    public TransactionDTO depot(OperationRequest request) {
-        Compte compte = compteService.findCompteEntityByNumero(request.getNumeroCompte());
+    public TransactionDTO effectuerDepot(OperationRequest request) {
+        Compte compte = findCompteEntityByNumero(request.getNumeroCompte());
         
         BigDecimal nouveauSolde = compte.getSolde().add(request.getMontant());
         
@@ -41,7 +38,6 @@ public class TransactionService {
         transaction.setMontant(request.getMontant());
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setCompte(compte);
-        transaction.setCompteId(compte.getId());
         transaction.setDescription(request.getDescription() != null ? request.getDescription() : "Dépôt");
         transaction.setSoldeApres(nouveauSolde);
         
@@ -52,8 +48,8 @@ public class TransactionService {
         return toDTO(transaction);
     }
     
-    public TransactionDTO retrait(OperationRequest request) {
-        Compte compte = compteService.findCompteEntityByNumero(request.getNumeroCompte());
+    public TransactionDTO effectuerRetrait(OperationRequest request) {
+        Compte compte = findCompteEntityByNumero(request.getNumeroCompte());
         
         if (compte.getSolde().compareTo(request.getMontant()) < 0) {
             throw new RuntimeException("Solde insuffisant. Solde actuel: " + compte.getSolde());
@@ -66,7 +62,6 @@ public class TransactionService {
         transaction.setMontant(request.getMontant());
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setCompte(compte);
-        transaction.setCompteId(compte.getId());
         transaction.setDescription(request.getDescription() != null ? request.getDescription() : "Retrait");
         transaction.setSoldeApres(nouveauSolde);
         
@@ -77,9 +72,9 @@ public class TransactionService {
         return toDTO(transaction);
     }
     
-    public TransactionDTO virement(VirementRequest request) {
-        Compte compteSource = compteService.findCompteEntityByNumero(request.getCompteSource());
-        Compte compteDestinataire = compteService.findCompteEntityByNumero(request.getCompteDestinataire());
+    public List<TransactionDTO> effectuerVirement(VirementRequest request) {
+        Compte compteSource = findCompteEntityByNumero(request.getCompteSource());
+        Compte compteDestinataire = findCompteEntityByNumero(request.getCompteDestinataire());
         
         if (compteSource.getId().equals(compteDestinataire.getId())) {
             throw new RuntimeException("Le compte source et le compte destinataire ne peuvent pas être identiques");
@@ -100,7 +95,6 @@ public class TransactionService {
         transactionSource.setMontant(request.getMontant());
         transactionSource.setDateTransaction(now);
         transactionSource.setCompte(compteSource);
-        transactionSource.setCompteId(compteSource.getId());
         transactionSource.setCompteDestinataire(compteDestinataire);
         transactionSource.setDescription(request.getDescription() != null ? 
             "Virement vers " + compteDestinataire.getNumeroCompte() + " - " + request.getDescription() : 
@@ -113,7 +107,6 @@ public class TransactionService {
         transactionDestinataire.setMontant(request.getMontant());
         transactionDestinataire.setDateTransaction(now);
         transactionDestinataire.setCompte(compteDestinataire);
-        transactionDestinataire.setCompteId(compteDestinataire.getId());
         transactionDestinataire.setCompteDestinataire(compteSource);
         transactionDestinataire.setDescription(request.getDescription() != null ? 
             "Virement reçu de " + compteSource.getNumeroCompte() + " - " + request.getDescription() : 
@@ -129,18 +122,45 @@ public class TransactionService {
         transactionRepository.save(transactionSource);
         transactionRepository.save(transactionDestinataire);
         
-        return toDTO(transactionSource);
+        return List.of(toDTO(transactionSource), toDTO(transactionDestinataire));
+    }
+    
+    public List<TransactionDTO> getTransactionsByCompteId(String compteId) {
+        Compte compte = compteRepository.findById(compteId)
+                .orElseThrow(() -> new RuntimeException("Compte non trouvé avec l'ID: " + compteId));
+        return transactionRepository.findByCompte(compte).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public List<TransactionDTO> getTransactionsByClientId(String clientId) {
+        List<Compte> comptes = compteRepository.findByClientId(clientId);
+        return comptes.stream()
+                .flatMap(compte -> transactionRepository.findByCompte(compte).stream())
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public List<TransactionDTO> getAllTransactions() {
+        return transactionRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    private Compte findCompteEntityByNumero(String numeroCompte) {
+        return compteRepository.findByNumeroCompte(numeroCompte)
+                .orElseThrow(() -> new RuntimeException("Compte non trouvé avec le numéro: " + numeroCompte));
     }
     
     public List<TransactionDTO> getTransactionsByCompte(String numeroCompte) {
-        Compte compte = compteService.findCompteEntityByNumero(numeroCompte);
+        Compte compte = findCompteEntityByNumero(numeroCompte);
         return transactionRepository.findByCompte(compte).stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
     
     public List<TransactionDTO> getTransactionsByCompteAndPeriod(String numeroCompte, LocalDate dateDebut, LocalDate dateFin) {
-        Compte compte = compteService.findCompteEntityByNumero(numeroCompte);
+        Compte compte = findCompteEntityByNumero(numeroCompte);
         LocalDateTime startDateTime = dateDebut.atStartOfDay();
         LocalDateTime endDateTime = dateFin.atTime(LocalTime.MAX);
         

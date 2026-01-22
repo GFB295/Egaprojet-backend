@@ -1,8 +1,9 @@
 package com.example.Ega.backend.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Document(collection = "clients")
 @Data
@@ -49,5 +51,10 @@ public class Client {
     
     @NotBlank(message = "La nationalité est obligatoire")
     private String nationalite;
+    
+    @DBRef(lazy = true)
+    private List<Compte> comptes;
+    
+    @DBRef(lazy = true)
+    private User user;
 }
-

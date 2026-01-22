@@ -10,10 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityUtil {
     
-    @Autowired
-    private UserRepository userRepository;
+    private static UserRepository userRepository;
     
-    public User getCurrentUser() {
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        SecurityUtil.userRepository = userRepository;
+    }
+    
+    public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
@@ -24,20 +28,20 @@ public class SecurityUtil {
                 .orElse(null);
     }
     
-    public String getCurrentClientId() {
+    public static String getCurrentClientId() {
         User user = getCurrentUser();
         if (user != null && user.getClient() != null) {
-            return user.getClient().getId();
+            return user.getClient().getId().toString();
         }
         return null;
     }
     
-    public boolean isAdmin() {
+    public static boolean isAdmin() {
         User user = getCurrentUser();
         return user != null && "ROLE_ADMIN".equals(user.getRole());
     }
     
-    public boolean isClientOwner(String clientId) {
+    public static boolean isClientOwner(String clientId) {
         if (isAdmin()) {
             return true; // Admin peut tout voir
         }
@@ -45,3 +49,5 @@ public class SecurityUtil {
         return currentClientId != null && currentClientId.equals(clientId);
     }
 }
+
+

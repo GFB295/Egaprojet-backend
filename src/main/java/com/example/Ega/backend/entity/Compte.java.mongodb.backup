@@ -1,17 +1,17 @@
 package com.example.Ega.backend.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Document(collection = "comptes")
 @Data
@@ -23,8 +23,6 @@ public class Compte {
     private String id;
     
     @Indexed(unique = true)
-    @Pattern(regexp = "^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$", 
-             message = "Le numéro de compte doit être au format IBAN valide")
     private String numeroCompte;
     
     @NotNull(message = "Le type de compte est obligatoire")
@@ -34,15 +32,17 @@ public class Compte {
     private LocalDate dateCreation;
     
     @NotNull(message = "Le solde est obligatoire")
-    private BigDecimal solde = BigDecimal.ZERO;
+    private BigDecimal solde;
     
     @NotNull(message = "Le client est obligatoire")
-    @DBRef
+    @DBRef(lazy = true)
     private Client client;
+    
+    @DBRef(lazy = true)
+    private List<Transaction> transactions;
     
     public enum TypeCompte {
         COURANT,
         EPARGNE
     }
 }
-

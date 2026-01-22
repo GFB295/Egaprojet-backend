@@ -1,8 +1,9 @@
 package com.example.Ega.backend.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,13 +28,16 @@ public class Transaction {
     private BigDecimal montant;
     
     @NotNull(message = "La date est obligatoire")
+    @Indexed
     private LocalDateTime dateTransaction;
     
     @NotNull(message = "Le compte est obligatoire")
-    @DBRef
+    @DBRef(lazy = true)
     private Compte compte;
     
-    @DBRef
+    private String compteId; // Stocke aussi l'ID pour faciliter les requêtes
+    
+    @DBRef(lazy = true)
     private Compte compteDestinataire;
     
     private String description;
@@ -47,4 +51,3 @@ public class Transaction {
         VIREMENT
     }
 }
-

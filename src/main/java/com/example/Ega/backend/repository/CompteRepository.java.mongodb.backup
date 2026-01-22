@@ -15,4 +15,3 @@ public interface CompteRepository extends MongoRepository<Compte, String> {
     List<Compte> findByClient(Client client);
     List<Compte> findByClientId(String clientId);
 }
-

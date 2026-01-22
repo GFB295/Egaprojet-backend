@@ -1,9 +1,9 @@
 package com.example.Ega.backend.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @NotBlank(message = "Le mot de passe est obligatoire")
     private String password;
     
-    @DBRef
+    @DBRef(lazy = true)
     private Client client;
     
     private String role = "ROLE_CLIENT"; // ROLE_CLIENT ou ROLE_ADMIN
@@ -69,4 +69,3 @@ public class User implements UserDetails {
         return enabled;
     }
 }
-

@@ -11,4 +11,3 @@ public interface ClientRepository extends MongoRepository<Client, String> {
     Optional<Client> findByCourriel(String courriel);
     boolean existsByCourriel(String courriel);
 }
-

@@ -14,13 +14,10 @@ public interface TransactionRepository extends MongoRepository<Transaction, Stri
     List<Transaction> findByCompte(Compte compte);
     List<Transaction> findByCompteId(String compteId);
     
-    @Query("{ 'compte.id': ?0, 'dateTransaction': { $gte: ?1, $lte: ?2 } }")
+    @Query("{ 'compteId': ?0, 'dateTransaction': { $gte: ?1, $lte: ?2 } }")
     List<Transaction> findByCompteIdAndDateTransactionBetween(
         String compteId,
         LocalDateTime startDate,
         LocalDateTime endDate
     );
-    
-    List<Transaction> findByCompteOrderByDateTransactionDesc(Compte compte);
 }
-
